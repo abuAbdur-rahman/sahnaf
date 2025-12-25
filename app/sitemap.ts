@@ -64,7 +64,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch (error) {
     console.error("Error generating dynamic sitemap routes:", error);
-    // Continue with static routes only
   }
 
   return routes;

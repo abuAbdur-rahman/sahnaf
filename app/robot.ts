@@ -8,27 +8,28 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/solar", "/shop"],
-        disallow: ["/admin/*", "/api/*", "/_next/*", "/private/*"],
-        crawlDelay: 2, // Be nice to servers
-      },
-      {
-        // Special rules for major search engines
-        userAgent: ["Googlebot", "Bingbot"],
-        allow: "/",
-        disallow: ["/admin/*", "/api/*"],
-      },
-      {
-        // Block AI scrapers if desired
-        userAgent: [
-          "GPTBot",
-          "ChatGPT-User",
-          "CCBot",
-          "anthropic-ai",
-          "Claude-Web",
+        allow: [
+          "/",
+          "/solar",
+          "/shop",
+          "/sitemap.xml", // 👈 Explicitly allow the sitemap
         ],
-        allow: "/", // Uncomment if you want to block AI crawlers
-        disallow: ["/admin/*", "/api/*"],
+        disallow: [
+          "/admin/*",
+          "/api/*", // ⚠️ This often conflicts with Search Console fetching
+          "/_next/*",
+          "/private/*",
+        ],
+      },
+      {
+        userAgent: ["Googlebot", "Bingbot"],
+        allow: [
+          "/",
+          "/sitemap.xml",
+          "/api/products", // 👈 Allow Google to see the data sources
+          "/api/solar-projects", // 👈 Allow Google to see the data sources
+        ],
+        disallow: ["/admin/*", "/api/auth/*"], // Only block sensitive API parts
       },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,
