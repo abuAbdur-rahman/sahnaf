@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
+import { ConfirmDeleteDialog } from "@/components/admin/confirmDeleteDialog";
 
 export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -32,6 +33,36 @@ export default function AdminPage() {
 
   const [solarModalOpen, setSolarModalOpen] = useState(false);
   const [editingSolar, setEditingSolar] = useState<SolarProject | null>(null);
+
+  const [deleteTarget, setDeleteTarget] = useState<{
+    type: "product" | "solar";
+    id: string | number;
+  } | null>(null);
+
+  const [deleting, setDeleting] = useState(false);
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+
+    setDeleting(true);
+    try {
+      if (deleteTarget.type === "product") {
+        await apiJson(`/api/products`, "DELETE", { id: deleteTarget.id });
+      }
+
+      if (deleteTarget.type === "solar") {
+        await apiJson(`/api/solar-projects`, "DELETE", {
+          id: deleteTarget.id,
+        });
+      }
+
+      await fetchData(); // 🔁 refresh after ANY delete
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -68,15 +99,15 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteProduct = async (id: string) => {
-    if (!confirm("Delete this product?")) return;
-    try {
-      await apiJson(`/api/products?id=${id}`, "DELETE");
-      await fetchData();
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const handleDeleteProduct = async (id: string) => {
+  //   if (!confirm("Delete this product?")) return;
+  //   try {
+  //     await apiJson(`/api/products?id=${id}`, "DELETE");
+  //     await fetchData();
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   // Gas
   const handleUpdateGasPrice = async (newPrice: number) => {
@@ -100,15 +131,15 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteSolar = async (id: number) => {
-    if (!confirm("Delete project?")) return;
-    try {
-      await apiJson(`/api/solar-projects`, "DELETE", { id });
-      await fetchData();
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const handleDeleteSolar = async (id: number) => {
+  //   if (!confirm("Delete project?")) return;
+  //   try {
+  //     await apiJson(`/api/solar-projects`, "DELETE", { id });
+  //     await fetchData();
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   const imageKitEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!;
 
@@ -171,10 +202,12 @@ export default function AdminPage() {
                       <span className="text-gray-400">No image</span>
                     )}
                   </div>
+
                   <h3 className="font-semibold mb-2">{p.name}</h3>
                   <p className="text-sm text-gray-600 mb-2">
                     ₦{p.price.toLocaleString()}
                   </p>
+
                   <div className="flex gap-2 text-xs mb-2">
                     <span className="bg-gray-100 px-2 py-1 rounded">
                       {p.category}
@@ -208,7 +241,9 @@ export default function AdminPage() {
                     <Button
                       variant="destructive"
                       className="flex-1"
-                      onClick={() => handleDeleteProduct(p.id)}
+                      onClick={() =>
+                        setDeleteTarget({ type: "product", id: p.id })
+                      }
                     >
                       <Trash2 className="h-4 w-4 mr-2" /> Delete
                     </Button>
@@ -296,7 +331,9 @@ export default function AdminPage() {
                       <Button
                         variant="destructive"
                         className="flex-1"
-                        onClick={() => handleDeleteSolar(s.id)}
+                        onClick={() =>
+                          setDeleteTarget({ type: "solar", id: s.id })
+                        }
                       >
                         <Trash2 className="h-4 w-4 mr-2" /> Delete
                       </Button>
@@ -326,6 +363,14 @@ export default function AdminPage() {
           setEditingSolar(null);
         }}
         onSave={handleSaveSolar}
+      />
+      <ConfirmDeleteDialog
+        open={!!deleteTarget}
+        loading={deleting}
+        title="Delete item?"
+        description="This action cannot be undone. The item will be permanently removed."
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={confirmDelete}
       />
     </div>
   );

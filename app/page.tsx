@@ -139,7 +139,7 @@ export default async function HomePage() {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-6 mt-16 pt-16 border-t border-white/10">
+            <div className="grid grid-cols-3 gap-6 mt-16 mb-10 sm:pt-16 border-t border-white/10">
               {[
                 { label: "Projects Completed", value: "100+" },
                 { label: "Happy Customers", value: "500+" },
@@ -320,7 +320,7 @@ export default async function HomePage() {
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20 md:py-28">
         <Card className="bg-linear-to-br from-emerald-600 to-teal-700 border-0 shadow-2xl overflow-hidden relative">
-          <div className="absolute inset-0 bg-grid-white/10 [mask:linear-gradient(0deg,transparent,black)]" />
+          <div className="absolute inset-0 bg-grid-white/10 mask-[linear-gradient(0deg,transparent,black)]" />
           <CardContent className="p-12 md:p-16 relative z-10 text-center text-white">
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
               Ready to Get Started?

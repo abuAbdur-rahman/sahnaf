@@ -39,6 +39,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Manual Google Verification Tag */}
+        <meta
+          name="google-site-verification"
+          content="pyDiOct_10ovMfW5_jMokK-cWFUnGFeStYbIrPFIjl0"
+        />
+      </head>
       <body className={inter.className}>
         <Header />
         <main className="min-h-screen">{children}</main>

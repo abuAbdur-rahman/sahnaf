@@ -247,7 +247,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="text-slate-400 hover:text-emerald-400 transition-colors"
             >
-              Built by Abdulazeez
+              Powered by Abdulazeez
             </Link>
           </div>
         </div>

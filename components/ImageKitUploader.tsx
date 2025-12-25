@@ -81,8 +81,8 @@ export const ImageKitUploader: React.FC<Props> = ({
           <Image
             urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!}
             src={value}
-            width={600}
-            height={338}
+            width={300}
+            height={200}
             alt="preview"
             className="rounded-lg border"
           />
