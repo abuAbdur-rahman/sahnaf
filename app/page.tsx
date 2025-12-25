@@ -15,14 +15,12 @@ async function getGasPrice() {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/gas-price`,
-      {
-        cache: "no-store",
-      },
+      { cache: "no-store" },
     );
-    // if (!res.ok) return { price: 1300, updatedAt: "2 hours ago" };
     return res.json();
   } catch {
-    return { price: 1300, updatedAt: "2 hours ago" };
+    // USE A DATE OBJECT HERE
+    return { price: 1300, updatedAt: new Date() };
   }
 }
 
