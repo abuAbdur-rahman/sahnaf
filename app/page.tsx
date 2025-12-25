@@ -81,15 +81,17 @@ export default async function HomePage() {
             alt="Solar Installation Hero"
             fill
             priority
-            className="object-cover opacity-40"
+            className="object-cover opacity-70"
           />
-          <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/95 to-slate-950/40" />
+
+          {/* Softer gradient overlay */}
+          <div className="absolute inset-0 bg-linear-to-r from-slate-950/80 via-slate-950/50 to-slate-950/40" />
         </div>
 
-        {/* Decorative Blur Effects */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute top-20 right-20 w-96 h-96 bg-emerald-500 rounded-full blur-[150px]" />
-          <div className="absolute bottom-20 left-20 w-96 h-96 bg-amber-500 rounded-full blur-[150px]" />
+        {/* Decorative Blur Effects (reduced impact) */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-20 right-20 w-96 h-96 bg-emerald-500 rounded-full blur-[120px]" />
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-amber-500 rounded-full blur-[120px]" />
         </div>
 
         {/* Content */}
