@@ -1,4 +1,3 @@
-// components/Header.tsx
 "use client";
 
 import Link from "next/link";
@@ -6,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Route } from "next";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,23 +14,22 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetClose,
 } from "@/components/ui/sheet";
-import { Route } from "next";
 
 interface HeaderProps {
   shopStatus?: "open" | "closed";
 }
 
 export default function Header({ shopStatus = "open" }: HeaderProps) {
-  const pathname = usePathname() || "/";
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -40,42 +39,37 @@ export default function Header({ shopStatus = "open" }: HeaderProps) {
     { href: "/solar", label: "Solar" },
   ];
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === href : pathname.startsWith(href);
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === href;
+    return pathname.startsWith(href);
+  };
 
   return (
     <header
       className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 transition-all duration-300 ${
         scrolled ? "shadow-md" : ""
       }`}
-      role="banner"
     >
       <div className="container mx-auto px-4">
-        <div
-          className={`flex items-center justify-between transition-all duration-300 ${
-            scrolled ? "h-12" : "h-16"
-          }`}
-        >
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity group shrink-0"
-            aria-label="Go to homepage"
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity group"
           >
-            <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors shrink-0">
+            <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
               <Image
                 src="/logo.png"
                 alt="Sahnaf Logo"
                 width={40}
                 height={40}
                 className="object-contain"
-                priority
               />
             </div>
-
-            {/* Show text only on sm+ to save horizontal space on very small screens */}
-            <div className="hidden sm:flex flex-col leading-tight">
-              <span className="font-bold text-lg">Sahnaf Global Tech</span>
+            <div className="flex flex-col">
+              <span className="font-bold text-lg leading-tight">
+                Sahnaf Global Tech
+              </span>
               <span className="text-xs text-muted-foreground">
                 Ogbomoso, Nigeria
               </span>
@@ -83,38 +77,33 @@ export default function Header({ shopStatus = "open" }: HeaderProps) {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav
-            className="hidden md:flex items-center gap-2 lg:gap-3 flex-1 justify-center"
-            aria-label="Primary"
-          >
-            <div className="flex gap-2 overflow-x-auto no-scrollbar px-2">
-              {navLinks.map((link) => (
-                <Link key={link.href} href={link.href as Route<string>}>
-                  <Button
-                    variant={isActive(link.href) ? "default" : "ghost"}
-                    className={`whitespace-nowrap ${
-                      isActive(link.href)
-                        ? "bg-emerald-600 hover:bg-emerald-500"
-                        : ""
-                    }`}
-                    aria-current={isActive(link.href) ? "page" : undefined}
-                  >
-                    {link.label}
-                  </Button>
-                </Link>
-              ))}
-            </div>
+          <nav className="hidden md:flex items-center gap-2">
+            {navLinks.map((link) => (
+              <Link key={link.href} href={link.href as Route<string>}>
+                <Button
+                  variant={isActive(link.href) ? "default" : "ghost"}
+                  className={
+                    isActive(link.href)
+                      ? "bg-emerald-600 hover:bg-emerald-500"
+                      : ""
+                  }
+                >
+                  {link.label}
+                </Button>
+              </Link>
+            ))}
           </nav>
 
           {/* Right Side: Status Badge & Mobile Menu */}
           <div className="flex items-center gap-3">
-            {/* Status Badge - visible from xs (compact) */}
+            {/* Status Badge */}
             <Badge
               variant={shopStatus === "open" ? "default" : "destructive"}
-              className={`flex items-center gap-2 px-3 py-1 text-xs ${
-                shopStatus === "open" ? "bg-emerald-100 text-emerald-800" : ""
+              className={`hidden sm:flex items-center gap-2 ${
+                shopStatus === "open"
+                  ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100"
+                  : ""
               }`}
-              aria-hidden={false}
             >
               <span
                 className={`w-2 h-2 rounded-full ${
@@ -122,33 +111,20 @@ export default function Header({ shopStatus = "open" }: HeaderProps) {
                     ? "bg-emerald-500 animate-pulse"
                     : "bg-red-500"
                 }`}
-                aria-hidden
               />
-              <span className="font-semibold">
-                {shopStatus === "open" ? "Open" : "Closed"}
+              <span className="text-xs font-semibold">
+                {shopStatus === "open" ? "We're Open" : "Closed"}
               </span>
             </Badge>
 
-            {/* Desktop CTA (small on md+, hidden on mobile) */}
-            <div className="hidden md:flex items-center gap-2">
-              <Link
-                href="https://wa.me/2347068288647"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="whitespace-nowrap"
-              >
-                <Button size="sm">Contact</Button>
-              </Link>
-            </div>
-
-            {/* Mobile Menu (Sheet) */}
+            {/* Mobile Menu */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="md:hidden"
-                  aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                  aria-label="Toggle menu"
                 >
                   {mobileMenuOpen ? (
                     <X className="h-5 w-5" />
@@ -157,28 +133,16 @@ export default function Header({ shopStatus = "open" }: HeaderProps) {
                   )}
                 </Button>
               </SheetTrigger>
-
-              <SheetContent side="right" className="w-72 sm:w-80">
-                <SheetHeader className="flex items-center justify-between">
+              <SheetContent side="right" className="w-75 sm:w-100">
+                <SheetHeader>
                   <SheetTitle>Menu</SheetTitle>
-                  {/* Close button for clarity inside sheet */}
-                  <SheetClose asChild>
-                    <Button variant="ghost" size="icon" aria-label="Close menu">
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </SheetClose>
                 </SheetHeader>
-
-                <nav
-                  className="flex flex-col gap-3 mt-6"
-                  aria-label="Mobile primary"
-                >
+                <nav className="flex flex-col gap-2 mt-8">
                   {navLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href as Route<string>}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="w-full"
                     >
                       <Button
                         variant={isActive(link.href) ? "default" : "ghost"}
@@ -187,7 +151,6 @@ export default function Header({ shopStatus = "open" }: HeaderProps) {
                             ? "bg-emerald-600 hover:bg-emerald-500"
                             : ""
                         }`}
-                        aria-current={isActive(link.href) ? "page" : undefined}
                       >
                         {link.label}
                         <ChevronRight className="h-4 w-4" />
@@ -196,16 +159,9 @@ export default function Header({ shopStatus = "open" }: HeaderProps) {
                   ))}
 
                   {/* Shop Status in Mobile */}
-                  <div className="mt-4 pt-4 border-t">
-                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                      <div>
-                        <div className="text-sm font-medium">Shop Status</div>
-                        <div className="text-xs text-gray-600">
-                          {shopStatus === "open"
-                            ? "We're open — come by!"
-                            : "Currently closed"}
-                        </div>
-                      </div>
+                  <div className="mt-6 pt-6 border-t">
+                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                      <span className="text-sm font-medium">Shop Status</span>
                       <Badge
                         variant={
                           shopStatus === "open" ? "default" : "destructive"
@@ -229,7 +185,7 @@ export default function Header({ shopStatus = "open" }: HeaderProps) {
                   </div>
 
                   {/* Contact Info */}
-                  <div className="mt-4 p-3 bg-emerald-50 rounded-lg">
+                  <div className="mt-4 p-4 bg-emerald-50 rounded-lg">
                     <p className="text-sm font-semibold text-emerald-900 mb-2">
                       Contact Us
                     </p>
