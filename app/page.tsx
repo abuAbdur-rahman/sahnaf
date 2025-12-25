@@ -42,32 +42,26 @@ async function getShops() {
     return res.json();
   } catch {
     return [
-      {
-        id: "1",
-        name: "Jornalis Junction (Under-G)",
-        address: "UnderG Area, Ogbomoso, Oyo State",
-        phone: "08032580975",
-        services: ["Gas Refill", "Oil", "POS", "Tech Products", "Solar Pickup"],
-        hasGas: true,
-        mapEmbed:
-          "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d476.8335889582579!2d4.26279230063179!3d8.159310035985504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10370daf2d14ff23%3A0xeacf0a78619bdb88!2sJolanis%20Guest%20House!5e0!3m2!1sen!2sng!4v1766588385761!5m2!1sen!2sng",
-        isOpen: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: "2",
-        name: "Opposite Anbode Filling Station",
-        address: "Randa Area, Ogbomoso, Oyo State",
-        phone: "08161154835",
-        services: ["Solar Consults", "Tech Pickup", "POS"],
-        hasGas: false,
-        mapEmbed:
-          "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3949.6514888351066!2d4.228969499999999!3d8.1369169!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103713ce14357323%3A0x91aef1b44edb59ed!2sSAHNAF%20GLOBAL%20TECH!5e0!3m2!1sen!2sng!4v1766588087593!5m2!1sen!2sng",
-        isOpen: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+      // {
+      //   id: "1",
+      //   name: "Jornalis Junction (Under-G)",
+      //   address: "UnderG Area, Ogbomoso, Oyo State",
+      //   phone: "08061154835",
+      //   services: ["Gas Refill", "Oil", "POS", "Tech Products", "Solar Pickup"],
+      //   hasGas: true,
+      //   mapEmbed:
+      //     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d476.8335889582579!2d4.26279230063179!3d8.159310035985504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10370daf2d14ff23%3A0xeacf0a78619bdb88!2sJolanis%20Guest%20House!5e0!3m2!1sen!2sng!4v1766588385761!5m2!1sen!2sng",
+      // },
+      // {
+      //   id: "2",
+      //   name: "Opposite Anbode Filling Station",
+      //   address: "Randa Area, Ogbomoso, Oyo State",
+      //   phone: "08032580975",
+      //   services: ["Solar Consults", "Tech Pickup", "POS"],
+      //   hasGas: false,
+      //   mapEmbed:
+      //     "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1974.7155995482967!2d4.263815!3d8.159237!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10370db54ee94e5b%3A0xee2927c9c86f1d4a!2sDainty%20store!5e0!3m2!1sen!2sng!4v1766662847881!5m2!1sen!2sng",
+      // },
     ];
   }
 }
@@ -89,7 +83,7 @@ export default async function HomePage() {
             priority
             className="object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/95 to-slate-950/80" />
+          <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/95 to-slate-950/40" />
         </div>
 
         {/* Decorative Blur Effects */}
