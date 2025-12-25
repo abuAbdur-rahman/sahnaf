@@ -1,276 +1,172 @@
+// app/api/solar-projects/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { products } from "@/lib/schema";
-import { authOptions } from "@/lib/auth";
-import { eq, desc } from "drizzle-orm";
-import { isAuthorized } from "@/lib/utils";
+import { solarProjects } from "@/lib/schema";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { isAuthorized } from "@/lib/utils";
+import { eq, desc } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
 async function checkAuth() {
   const session = await getServerSession(authOptions);
-  if (!session || !isAuthorized(session?.user?.email)) {
+  if (!session || !isAuthorized(session.user?.email)) {
     throw new Error("Unauthorized");
   }
   return session;
 }
 
-// GET: Public product listing with optional category filter
+// GET: public listing
 export async function GET(request: NextRequest) {
   try {
-    const category = request.nextUrl.searchParams.get("category");
-
-    if (category && category !== "all") {
-      const data = await db
-        .select()
-        .from(products)
-        .orderBy(desc(products.createdAt))
-        .where(eq(products.category, category));
-
-      return NextResponse.json(data);
-    }
-
+    const q = request.nextUrl.searchParams.get("q");
     const data = await db
       .select()
-      .from(products)
-      .orderBy(desc(products.createdAt));
+      .from(solarProjects)
+      .orderBy(desc(solarProjects.createdAt));
+
+    // simple search by title/location if q provided
+    if (q) {
+      const filtered = data.filter(
+        (p) =>
+          p.title?.toLowerCase().includes(q.toLowerCase()) ||
+          p.location?.toLowerCase().includes(q.toLowerCase()),
+      );
+      return NextResponse.json(filtered);
+    }
 
     return NextResponse.json(data);
   } catch (err) {
-    console.error("GET /api/products error:", err);
+    console.error("GET /api/solar-projects error:", err);
     const error = err as Error;
     return NextResponse.json(
-      { error: error.message || "Failed to fetch products" },
+      { error: error.message || "Failed to fetch solar projects" },
       { status: 500 },
     );
   }
 }
 
-// POST: Admin add new product
+// POST: create new project (admin)
 export async function POST(request: Request) {
   try {
     await checkAuth();
-
     const body = await request.json();
-    const { name, price, category, shop, stock, description, image } = body;
+    const { title, location, image, description, kva, completedAt } = body;
 
-    // Validate required fields
-    if (
-      !name ||
-      price === undefined ||
-      !category ||
-      !shop ||
-      !stock ||
-      !image
-    ) {
+    if (!title || !image) {
       return NextResponse.json(
-        {
-          error: "Missing required fields",
-          required: ["name", "price", "category", "shop", "stock", "image"],
-        },
+        { error: "Missing required fields", required: ["title", "image"] },
         { status: 400 },
       );
     }
 
-    // Validate price is a positive number
-    if (typeof price !== "number" || price < 0) {
-      return NextResponse.json(
-        { error: "Price must be a positive number" },
-        { status: 400 },
-      );
-    }
-
-    // Insert new product
-    const [newProduct] = await db
-      .insert(products)
+    const [newProject] = await db
+      .insert(solarProjects)
       .values({
-        name,
-        price: price.toString(),
-        category,
-        shop,
-        stock,
-        description: description || null,
+        title,
+        location: location || null,
         image,
+        description: description || null,
+        kva: kva || null,
+        completedAt: completedAt ? new Date(completedAt) : null,
       })
       .returning();
 
     return NextResponse.json(
-      { success: true, data: newProduct },
+      { success: true, data: newProject },
       { status: 201 },
     );
   } catch (err) {
-    console.error("POST /api/products error:", err);
+    console.error("POST /api/solar-projects error:", err);
     const error = err as Error;
     const status = error.message === "Unauthorized" ? 401 : 500;
     return NextResponse.json(
-      { error: error.message || "Failed to create product" },
+      { error: error.message || "Failed to create project" },
       { status },
     );
   }
 }
 
-// PUT: Admin update product
+// PUT: update project (admin)
 export async function PUT(request: Request) {
   try {
     await checkAuth();
-
     const body = await request.json();
     const { id, ...updateData } = body;
 
-    // Validate ID
     if (!id) {
       return NextResponse.json(
-        { error: "Product ID is required" },
+        { error: "Project ID is required" },
         { status: 400 },
       );
     }
 
-    // Check if product exists
     const existing = await db
       .select()
-      .from(products)
-      .where(eq(products.id, id))
+      .from(solarProjects)
+      .where(eq(solarProjects.id, id))
       .limit(1);
-
     if (existing.length === 0) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    // Validate price if provided
-    if (updateData.price !== undefined) {
-      if (typeof updateData.price !== "number" || updateData.price < 0) {
-        return NextResponse.json(
-          { error: "Price must be a positive number" },
-          { status: 400 },
-        );
-      }
-      updateData.price = updateData.price.toString();
-    }
+    // If completedAt provided convert to Date
+    if (updateData.completedAt)
+      updateData.completedAt = new Date(updateData.completedAt);
 
-    // Update product
-    const [updatedProduct] = await db
-      .update(products)
-      .set({
-        ...updateData,
-        updatedAt: new Date(),
-      })
-      .where(eq(products.id, id))
+    const [updated] = await db
+      .update(solarProjects)
+      .set({ ...updateData, updatedAt: new Date() })
+      .where(eq(solarProjects.id, id))
       .returning();
 
-    return NextResponse.json({ success: true, data: updatedProduct });
+    return NextResponse.json({ success: true, data: updated });
   } catch (err) {
-    console.error("PUT /api/products error:", err);
+    console.error("PUT /api/solar-projects error:", err);
     const error = err as Error;
     const status = error.message === "Unauthorized" ? 401 : 500;
     return NextResponse.json(
-      { error: error.message || "Failed to update product" },
+      { error: error.message || "Failed to update project" },
       { status },
     );
   }
 }
 
-// PATCH: Admin update stock status only
-export async function PATCH(request: Request) {
-  try {
-    await checkAuth();
-
-    const body = await request.json();
-    const { id, stock } = body;
-
-    // Validate required fields
-    if (!id || !stock) {
-      return NextResponse.json(
-        { error: "Product ID and stock status are required" },
-        { status: 400 },
-      );
-    }
-
-    // Validate stock value
-    const validStockStatuses = ["in-stock", "low-stock", "out-of-stock"];
-    if (!validStockStatuses.includes(stock)) {
-      return NextResponse.json(
-        {
-          error: "Invalid stock status",
-          validValues: validStockStatuses,
-        },
-        { status: 400 },
-      );
-    }
-
-    // Check if product exists
-    const existing = await db
-      .select()
-      .from(products)
-      .where(eq(products.id, id))
-      .limit(1);
-
-    if (existing.length === 0) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
-
-    // Update stock status
-    const [updatedProduct] = await db
-      .update(products)
-      .set({
-        stock,
-        updatedAt: new Date(),
-      })
-      .where(eq(products.id, id))
-      .returning();
-
-    return NextResponse.json({ success: true, data: updatedProduct });
-  } catch (err) {
-    console.error("PATCH /api/products error:", err);
-    const error = err as Error;
-    const status = error.message === "Unauthorized" ? 401 : 500;
-    return NextResponse.json(
-      { error: error.message || "Failed to update stock status" },
-      { status },
-    );
-  }
-}
-
-// DELETE: Admin remove product
+// DELETE: remove project (admin)
 export async function DELETE(request: Request) {
   try {
     await checkAuth();
-
     const body = await request.json();
     const { id } = body;
 
-    // Validate ID
     if (!id) {
       return NextResponse.json(
-        { error: "Product ID is required" },
+        { error: "Project ID is required" },
         { status: 400 },
       );
     }
 
-    // Check if product exists
     const existing = await db
       .select()
-      .from(products)
-      .where(eq(products.id, id))
+      .from(solarProjects)
+      .where(eq(solarProjects.id, id))
       .limit(1);
-
     if (existing.length === 0) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    // Delete product
-    await db.delete(products).where(eq(products.id, id));
-
+    await db.delete(solarProjects).where(eq(solarProjects.id, id));
     return NextResponse.json({
       success: true,
-      message: "Product deleted successfully",
+      message: "Project deleted successfully",
     });
   } catch (err) {
-    console.error("DELETE /api/products error:", err);
+    console.error("DELETE /api/solar-projects error:", err);
     const error = err as Error;
     const status = error.message === "Unauthorized" ? 401 : 500;
     return NextResponse.json(
-      { error: error.message || "Failed to delete product" },
+      { error: error.message || "Failed to delete project" },
       { status },
     );
   }

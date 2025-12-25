@@ -1,0 +1,308 @@
+---
+# Files changed / added
+
+The snippets below include the updated API route for solar projects, the corrected Drizzle schema, TS types, an updated Admin page using shadcn Tabs, and a couple of small front-end fixes (Image alt attributes + a responsive wrapper around the calculator).
+
+---
+
+// lib/schema.ts
+import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+
+export const solarProjects = pgTable("solar_projects", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  image: text("image").notNull(),
+  location: text("location"),
+  kva: text("kva"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
+});
+
+
+---
+
+// types.ts
+export interface SolarProject {
+  id: number;
+  title: string;
+  location?: string | null;
+  image: string;
+  description?: string | null;
+  kva?: string | null;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  completedAt?: string | null;
+}
+
+---
+
+// app/api/solar-projects/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import { solarProjects } from "@/lib/schema";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { isAuthorized } from "@/lib/utils";
+import { eq, desc } from "drizzle-orm";
+
+export const dynamic = "force-dynamic";
+
+async function checkAuth() {
+  const session = await getServerSession(authOptions);
+  if (!session || !isAuthorized(session.user?.email)) {
+    throw new Error("Unauthorized");
+  }
+  return session;
+}
+
+// GET: public listing
+export async function GET(request: NextRequest) {
+  try {
+    const q = request.nextUrl.searchParams.get("q");
+    const data = await db
+      .select()
+      .from(solarProjects)
+      .orderBy(desc(solarProjects.createdAt));
+
+    // simple search by title/location if q provided
+    if (q) {
+      const filtered = data.filter(
+        (p) =>
+          p.title?.toLowerCase().includes(q.toLowerCase()) ||
+          p.location?.toLowerCase().includes(q.toLowerCase()),
+      );
+      return NextResponse.json(filtered);
+    }
+
+    return NextResponse.json(data);
+  } catch (err) {
+    console.error("GET /api/solar-projects error:", err);
+    const error = err as Error;
+    return NextResponse.json(
+      { error: error.message || "Failed to fetch solar projects" },
+      { status: 500 },
+    );
+  }
+}
+
+// POST: create new project (admin)
+export async function POST(request: Request) {
+  try {
+    await checkAuth();
+    const body = await request.json();
+    const { title, location, image, description, kva, completedAt } = body;
+
+    if (!title || !image) {
+      return NextResponse.json(
+        { error: "Missing required fields", required: ["title", "image"] },
+        { status: 400 },
+      );
+    }
+
+    const [newProject] = await db
+      .insert(solarProjects)
+      .values({
+        title,
+        location: location || null,
+        image,
+        description: description || null,
+        kva: kva || null,
+        completedAt: completedAt ? new Date(completedAt) : null,
+      })
+      .returning();
+
+    return NextResponse.json({ success: true, data: newProject }, { status: 201 });
+  } catch (err) {
+    console.error("POST /api/solar-projects error:", err);
+    const error = err as Error;
+    const status = error.message === "Unauthorized" ? 401 : 500;
+    return NextResponse.json({ error: error.message || "Failed to create project" }, { status });
+  }
+}
+
+// PUT: update project (admin)
+export async function PUT(request: Request) {
+  try {
+    await checkAuth();
+    const body = await request.json();
+    const { id, ...updateData } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "Project ID is required" }, { status: 400 });
+    }
+
+    const existing = await db.select().from(solarProjects).where(eq(solarProjects.id, id)).limit(1);
+    if (existing.length === 0) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    // If completedAt provided convert to Date
+    if (updateData.completedAt) updateData.completedAt = new Date(updateData.completedAt);
+
+    const [updated] = await db
+      .update(solarProjects)
+      .set({ ...updateData, updatedAt: new Date() })
+      .where(eq(solarProjects.id, id))
+      .returning();
+
+    return NextResponse.json({ success: true, data: updated });
+  } catch (err) {
+    console.error("PUT /api/solar-projects error:", err);
+    const error = err as Error;
+    const status = error.message === "Unauthorized" ? 401 : 500;
+    return NextResponse.json({ error: error.message || "Failed to update project" }, { status });
+  }
+}
+
+// DELETE: remove project (admin)
+export async function DELETE(request: Request) {
+  try {
+    await checkAuth();
+    const body = await request.json();
+    const { id } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "Project ID is required" }, { status: 400 });
+    }
+
+    const existing = await db.select().from(solarProjects).where(eq(solarProjects.id, id)).limit(1);
+    if (existing.length === 0) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    await db.delete(solarProjects).where(eq(solarProjects.id, id));
+    return NextResponse.json({ success: true, message: "Project deleted successfully" });
+  } catch (err) {
+    console.error("DELETE /api/solar-projects error:", err);
+    const error = err as Error;
+    const status = error.message === "Unauthorized" ? 401 : 500;
+    return NextResponse.json({ error: error.message || "Failed to delete project" }, { status });
+  }
+}
+
+---
+
+// components/SolarPage.tsx (small fixes: alt on ImageKit Image, responsive wrapper for calculator)
+"use client";
+
+import SolarCalculator from "@/components/SolarCalculator";
+import { Image } from "@imagekit/next";
+// ... other imports remain unchanged
+
+export default function SolarPage() {
+  // ...state and useEffect unchanged
+
+  return (
+    <div className="min-h-screen bg-linear-to-b from-slate-50 to-white">
+      {/* ... hero and other sections unchanged ... */}
+
+      {/* Calculator Section - responsive wrapper */}
+      <section id="calculator" className="container mx-auto px-4 py-20 md:py-28">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            {/* ... */}
+          </div>
+
+          <Card className="shadow-xl border-2">
+            <CardContent className="p-6 sm:p-8">
+              {/* responsive wrapper ensures calculator doesn't overflow on small screens */}
+              <div className="w-full max-w-full overflow-x-auto">
+                <div className="min-w-[320px]">
+                  <SolarCalculator />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Gallery: ensure Image has alt set everywhere (already using project.title) */}
+
+      {/* ... rest unchanged ... */}
+    </div>
+  );
+}
+
+---
+
+// components/admin/AdminPage.tsx (use shadcn Tabs)
+"use client";
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+// ...other imports
+
+export default function AdminPage() {
+  // remove activeTab state string; use Tabs defaultValue
+  // keep other states unchanged
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <Button onClick={() => signOut()} variant="destructive">
+          <LogOut className="h-4 w-4 mr-2" /> Logout
+        </Button>
+      </div>
+
+      <Tabs defaultValue="products" className="mb-6">
+        <TabsList>
+          <TabsTrigger value="products">
+            <ShoppingBag className="inline h-5 w-5 mr-2" /> Products
+          </TabsTrigger>
+          <TabsTrigger value="gas">
+            <Droplets className="inline h-5 w-5 mr-2" /> Gas Price
+          </TabsTrigger>
+          <TabsTrigger value="solar">
+            <Zap className="inline h-5 w-5 mr-2" /> Solar Projects
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="products">
+          {/* products view (same as before) */}
+        </TabsContent>
+
+        <TabsContent value="gas">
+          {/* gas view (same as before) */}
+        </TabsContent>
+
+        <TabsContent value="solar">
+          {/* solar view (same as before) */}
+        </TabsContent>
+      </Tabs>
+
+      {/* modals below */}
+    </div>
+  );
+}
+
+---
+
+# DB migration notes (run with SQL or drizzle migrations)
+
+-- If your current table named "solar_projects" used different column names (image_url), run migrations like:
+
+ALTER TABLE solar_projects RENAME COLUMN image_url TO image;
+ALTER TABLE solar_projects ADD COLUMN created_at timestamptz DEFAULT now();
+ALTER TABLE solar_projects ADD COLUMN updated_at timestamptz DEFAULT now();
+ALTER TABLE solar_projects ADD COLUMN location text;
+ALTER TABLE solar_projects ADD COLUMN kva text;
+
+-- Or create a fresh table with the new schema if easier.
+
+---
+
+# What I changed, short
+
+1. Replaced product-oriented API with a full `app/api/solar-projects/route.ts` implementing GET/POST/PUT/DELETE and admin auth.
+2. Standardized the Drizzle schema for `solar_projects` and the `SolarProject` TS type.
+3. Added `alt` usage for ImageKit images and wrapped the calculator in a responsive container to avoid overflow on small screens.
+4. Updated the admin UI to use shadcn Tabs (cleaner and accessible).
+5. 
+
+---
+
+# Next steps
+
+- Run db push

@@ -32,14 +32,15 @@ export interface GasPrice {
 }
 
 export interface SolarProject {
-  id: string;
+  id: number;
   title: string;
-  location: string;
+  location?: string | null;
   image: string;
-  description?: string;
-  kva?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  description?: string | null;
+  kva?: string | null;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  completedAt?: string | null;
 }
 
 export interface SolarCalculation {

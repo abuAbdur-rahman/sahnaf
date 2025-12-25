@@ -1,9 +1,10 @@
 // components/ProductCard.tsx
 "use client";
 
-import { ShoppingBag, MessageCircle } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { Image } from "@imagekit/next";
 import { Product } from "@/types";
+import { FaWhatsapp } from "react-icons/fa";
 
 interface ProductCardProps {
   product: Product;
@@ -102,7 +103,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             className="bg-[#25D366] p-2.5 rounded-lg hover:bg-[#20BA5A] transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#25D366]"
             aria-label="Contact on WhatsApp"
           >
-            <MessageCircle className="h-4 w-4 text-white" />
+            <FaWhatsapp className="h-4 w-4 text-white" />
           </button>
         </div>
       </div>

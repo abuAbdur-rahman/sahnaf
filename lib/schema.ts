@@ -40,8 +40,12 @@ export const products = pgTable("products", {
 
 export const solarProjects = pgTable("solar_projects", {
   id: serial("id").primaryKey(),
-  title: text("title").notNull(), // e.g., "3.5KVA Hostel Setup"
+  title: text("title").notNull(),
   description: text("description"),
-  imageUrl: text("image_url").notNull(),
+  image: text("image").notNull(),
+  location: text("location"),
+  kva: text("kva"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
   completedAt: timestamp("completed_at"),
 });

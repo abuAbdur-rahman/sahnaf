@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_NG",
   },
+  verification: {
+    google: "pyDiOct_10ovMfW5_jMokK-cWFUnGFeStYbIrPFIjl0",
+  },
 };
 
 export default function RootLayout({
