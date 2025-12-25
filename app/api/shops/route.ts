@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { Shop } from "@/types";
 
+export const dynamic = "force-dynamic";
+
 const shopsData: Shop[] = [
   {
     id: "1",

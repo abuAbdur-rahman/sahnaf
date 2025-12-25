@@ -74,24 +74,36 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     await checkAuth();
-    const { id, ...updateData } = await request.json();
+    const body = await request.json();
+    const { id, name, price, category, shop, stock, description, image } = body;
 
     if (!id)
       return NextResponse.json({ error: "ID required" }, { status: 400 });
 
-    await db
-      .update(products)
-      .set({
-        ...updateData,
-        updatedAt: new Date(),
-      })
-      .where(eq(products.id, id));
+    type ProductUpdate = Partial<typeof products.$inferInsert>;
+
+    // Strict mapping: prevents 'id' or extra fields from entering .set()
+    const updateData: ProductUpdate = {
+      updatedAt: new Date(),
+    };
+
+    if (name !== undefined) updateData.name = name;
+    if (price !== undefined) updateData.price = price.toString();
+    if (category !== undefined) updateData.category = category;
+    if (shop !== undefined) updateData.shop = shop;
+    if (stock !== undefined) updateData.stock = stock;
+    if (description !== undefined) updateData.description = description;
+    if (image !== undefined) updateData.image = image;
+
+    await db.update(products).set(updateData).where(eq(products.id, id));
 
     return NextResponse.json({ success: true });
   } catch (err) {
     const error = err as Error;
-    const status = error.message === "Unauthorized" ? 401 : 500;
-    return NextResponse.json({ error: error.message }, { status });
+    return NextResponse.json(
+      { error: error.message },
+      { status: error.message === "Unauthorized" ? 401 : 500 },
+    );
   }
 }
 

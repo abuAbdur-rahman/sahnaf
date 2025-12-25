@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Search, Droplets, Loader2 } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import { Product, PRODUCT_CATEGORIES } from "@/types";
+import { formatPrice } from "@/lib/utils";
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -63,7 +64,7 @@ export default function ShopPage() {
               Today&apos;s Gas Price (Under-G)
             </div>
             <div className="text-2xl md:text-3xl font-bold font-mono">
-              ₦{gasPrice.price}/kg
+              ₦{formatPrice(gasPrice.price)}/kg
             </div>
             <div className="text-xs opacity-80 mt-1">
               Updated {gasPrice.updatedAt}

@@ -1,18 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import {
-  MapPin,
-  Phone,
-  Facebook,
-  Instagram,
-  Twitter,
-  Zap,
-  ShoppingBag,
-  Sun,
-} from "lucide-react";
+import { MapPin, Phone, Zap, ShoppingBag, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Route } from "next";
+
+import { FaFacebook as Facebook, FaWhatsapp as WhatsApp } from "react-icons/fa";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -56,7 +49,7 @@ const Footer = () => {
                 asChild
               >
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/p/Sahnaf-global-tech-100067172355156"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
@@ -71,27 +64,12 @@ const Footer = () => {
                 asChild
               >
                 <a
-                  href="https://instagram.com"
+                  href="https://wa.me/2347068288647"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
                 >
-                  <Instagram className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button
-                size="icon"
-                variant="ghost"
-                className="bg-slate-800/50 hover:bg-emerald-500/20 hover:text-emerald-400 transition-colors"
-                asChild
-              >
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Twitter"
-                >
-                  <Twitter className="h-4 w-4" />
+                  <WhatsApp className="h-4 w-4" />
                 </a>
               </Button>
             </div>
@@ -175,7 +153,7 @@ const Footer = () => {
                       href="tel:08032580975"
                       className="text-white hover:text-emerald-400 transition-colors font-medium"
                     >
-                      080 3258 0975
+                      080 6115 4835
                     </a>
                   </div>
                 </div>
@@ -187,7 +165,7 @@ const Footer = () => {
                       href="tel:08161154835"
                       className="text-white hover:text-emerald-400 transition-colors font-medium"
                     >
-                      081 6115 4835
+                      080 3258 0975
                     </a>
                   </div>
                 </div>

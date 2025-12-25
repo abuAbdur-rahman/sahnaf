@@ -99,16 +99,6 @@ export default function AdminPage() {
     }
   };
 
-  // const handleDeleteProduct = async (id: string) => {
-  //   if (!confirm("Delete this product?")) return;
-  //   try {
-  //     await apiJson(`/api/products?id=${id}`, "DELETE");
-  //     await fetchData();
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
   // Gas
   const handleUpdateGasPrice = async (newPrice: number) => {
     try {
@@ -298,13 +288,14 @@ export default function AdminPage() {
                   key={s.id}
                   className="bg-white rounded-lg border overflow-hidden"
                 >
-                  <div className="aspect-video bg-linear-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                  <div className="aspect-video bg-linear-to-br from-amber-500 to-orange-600 flex items-center justify-center relative">
                     {s.image ? (
                       <Image
                         urlEndpoint={imageKitEndpoint}
                         src={s.image}
                         alt={s.title}
-                        className="object-cover w-full h-full"
+                        fill // 👈 Add this
+                        className="object-cover" // 👈 Add this to ensure it fills the space nicely
                       />
                     ) : (
                       <Zap className="h-12 w-12 text-white" />

@@ -5,6 +5,7 @@ import { ShoppingBag } from "lucide-react";
 import { Image } from "@imagekit/next";
 import { Product } from "@/types";
 import { FaWhatsapp } from "react-icons/fa";
+import { formatPrice } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -13,7 +14,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const handleWhatsAppClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const message = `Hi, I'm interested in the ${product.name} priced at ₦${product.price.toLocaleString()}. Is it available at ${product.shop}?`;
+    const message = `Hi, I'm interested in the ${product.name} priced at ₦${formatPrice(product.price).toLocaleString()}. Is it available at ${product.shop}?`;
     const whatsappUrl = `https://wa.me/2347068288647?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
@@ -93,7 +94,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="flex justify-between items-center">
           <div>
             <span className="text-emerald-600 font-bold font-mono text-lg">
-              ₦{product.price.toLocaleString()}
+              ₦{formatPrice(product.price)}
             </span>
           </div>
 

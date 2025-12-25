@@ -27,3 +27,15 @@ export const isShopOpen = (): boolean => {
   const currentHour = getHours(new Date());
   return currentHour >= 10 && currentHour < 22;
 };
+
+export const formatPrice = (price: number | string) => {
+  const num = typeof price === "string" ? parseFloat(price) : price;
+
+  if (isNaN(num)) return "0";
+
+  return new Intl.NumberFormat("en-NG").format(num);
+};
+
+// Usage:
+// formatPrice(1000)      -> "1,000"
+// formatPrice("1500000") -> "1,500,000"

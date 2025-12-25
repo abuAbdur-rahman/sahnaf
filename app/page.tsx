@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import ShopCard from "@/components/ShopCard";
 import { Shop } from "@/types";
 import { formatDistanceToNow } from "date-fns";
+import { formatPrice } from "@/lib/utils";
 
 async function getGasPrice() {
   try {
@@ -175,7 +176,7 @@ export default async function HomePage() {
                 </h3>
                 <div className="text-sm opacity-90 mb-3">Under-G Location</div>
                 <div className="text-5xl font-bold font-mono mb-3">
-                  ₦{gasPrice.price}
+                  ₦{formatPrice(gasPrice.price)}
                 </div>
                 <div className="text-xs opacity-80 mb-4">
                   per kg • Updated{" "}
@@ -217,7 +218,9 @@ export default async function HomePage() {
                 <div className="bg-linear-to-br from-emerald-500 to-teal-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <ShoppingBag className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="font-bold text-xl mb-2">Tech Products</h3>
+                <h3 className="font-bold text-xl mb-2">
+                  Phone Accessories Store
+                </h3>
                 <p className="text-muted-foreground mb-4 leading-relaxed">
                   Quality chargers, power banks, accessories, and more. All in
                   stock and ready.

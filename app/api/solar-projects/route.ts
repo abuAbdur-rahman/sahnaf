@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { isAuthorized } from "@/lib/utils";
 import { eq, desc } from "drizzle-orm";
+// import { SolarProject } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -88,47 +89,50 @@ export async function POST(request: Request) {
   }
 }
 
-// PUT: update project (admin)
+// app/api/solar-projects/route.ts
 export async function PUT(request: Request) {
   try {
     await checkAuth();
     const body = await request.json();
-    const { id, ...updateData } = body;
+
+    // Extract ID and explicitly destructure allowed fields
+    const { id, title, description, image, location, kva, completedAt } = body;
 
     if (!id) {
-      return NextResponse.json(
-        { error: "Project ID is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
 
-    const existing = await db
-      .select()
-      .from(solarProjects)
-      .where(eq(solarProjects.id, id))
-      .limit(1);
-    if (existing.length === 0) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
-    }
+    // Explicitly build the update object to satisfy TypeScript and Drizzle
+    const updateData: Partial<typeof solarProjects.$inferInsert> = {
+      updatedAt: new Date(),
+    };
 
-    // If completedAt provided convert to Date
-    if (updateData.completedAt)
-      updateData.completedAt = new Date(updateData.completedAt);
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (image !== undefined) updateData.image = image;
+    if (location !== undefined) updateData.location = location;
+    if (kva !== undefined) updateData.kva = kva;
+    if (completedAt !== undefined) {
+      updateData.completedAt = completedAt ? new Date(completedAt) : null;
+    }
 
     const [updated] = await db
       .update(solarProjects)
-      .set({ ...updateData, updatedAt: new Date() })
-      .where(eq(solarProjects.id, id))
+      .set(updateData)
+      .where(eq(solarProjects.id, Number(id))) // Ensure ID is a number
       .returning();
+
+    if (!updated) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
 
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {
-    console.error("PUT /api/solar-projects error:", err);
+    console.error("PUT Error:", err);
     const error = err as Error;
-    const status = error.message === "Unauthorized" ? 401 : 500;
     return NextResponse.json(
-      { error: error.message || "Failed to update project" },
-      { status },
+      { error: error.message || "Update failed" },
+      { status: error.message === "Unauthorized" ? 401 : 500 },
     );
   }
 }

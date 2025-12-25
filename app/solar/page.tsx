@@ -14,6 +14,7 @@ import {
   Sun,
   Battery,
   Lightbulb,
+  Calendar,
 } from "lucide-react";
 import SolarCalculator from "@/components/SolarCalculator";
 import { Button } from "@/components/ui/button";
@@ -26,13 +27,23 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { SolarProject } from "@/types";
+import { format } from "date-fns";
 
 export default function SolarPage() {
   const [projects, setProjects] = useState<SolarProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedProject, setSelectedProject] = useState<SolarProject | null>(
+    null,
+  );
 
   useEffect(() => {
     async function fetchProjects() {
@@ -64,7 +75,7 @@ export default function SolarPage() {
         </div>
 
         {/* Grid Pattern Overlay */}
-        <div className="absolute inset-0 bg-grid-white/[0.05] [mask:linear-gradient(0deg,transparent,black)]" />
+        <div className="absolute inset-0 bg-grid-white/[0.05] mask-[linear-gradient(0deg,transparent,black)]" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
@@ -320,9 +331,10 @@ export default function SolarPage() {
               {projects.map((project) => (
                 <Card
                   key={project.id}
-                  className="overflow-hidden group border-2 hover:border-emerald-500 hover:shadow-xl transition-all"
+                  className="overflow-hidden group border-2 hover:border-emerald-500 hover:shadow-xl transition-all cursor-pointer"
+                  onClick={() => setSelectedProject(project)}
                 >
-                  <div className="aspect-video relative overflow-hidden bg-slate-900">
+                  <div className="aspect-4/3 relative overflow-hidden bg-slate-900">
                     {project.image ? (
                       <Image
                         urlEndpoint={imageKitEndpoint}
@@ -336,9 +348,19 @@ export default function SolarPage() {
                         <Zap className="h-16 w-16 text-white/10" />
                       </div>
                     )}
+                    {/* Overlay on hover */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">
+                          View Details
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <CardHeader>
-                    <CardTitle className="text-xl">{project.title}</CardTitle>
+                    <CardTitle className="text-xl line-clamp-1">
+                      {project.title}
+                    </CardTitle>
                     {project.location && (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <MapPin className="h-4 w-4 text-emerald-600" />
@@ -355,11 +377,6 @@ export default function SolarPage() {
                         {project.kva} System
                       </Badge>
                     )}
-                    {project.description && (
-                      <p className="text-sm text-muted-foreground mt-3 line-clamp-2">
-                        {project.description}
-                      </p>
-                    )}
                   </CardContent>
                 </Card>
               ))}
@@ -368,10 +385,142 @@ export default function SolarPage() {
         </div>
       </section>
 
+      {/* Project Details Modal */}
+      <Dialog
+        open={!!selectedProject}
+        onOpenChange={(open) => !open && setSelectedProject(null)}
+      >
+        <DialogContent className="max-w-4xl max-h-[90vh] p-0 gap-0 overflow-hidden">
+          <DialogHeader className="p-6 pb-4">
+            <DialogTitle className="text-2xl">
+              {selectedProject?.title}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="overflow-y-auto px-6 pb-6">
+            {/* Large Image */}
+            {selectedProject?.image && (
+              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-slate-900 mb-6">
+                <Image
+                  urlEndpoint={imageKitEndpoint}
+                  src={selectedProject.image}
+                  alt={selectedProject.title}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            )}
+
+            {/* Project Details */}
+            <div className="space-y-6">
+              {/* Info Grid */}
+              <div className="grid md:grid-cols-2 gap-4">
+                {selectedProject?.location && (
+                  <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-lg">
+                    <div className="bg-emerald-100 p-2 rounded-lg">
+                      <MapPin className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">
+                        Location
+                      </p>
+                      <p className="font-semibold">
+                        {selectedProject.location}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {selectedProject?.kva && (
+                  <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-lg">
+                    <div className="bg-amber-100 p-2 rounded-lg">
+                      <Zap className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">
+                        System Size
+                      </p>
+                      <p className="font-semibold">{selectedProject.kva}</p>
+                    </div>
+                  </div>
+                )}
+
+                {selectedProject?.completedAt && (
+                  <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-lg">
+                    <div className="bg-teal-100 p-2 rounded-lg">
+                      <Calendar className="h-5 w-5 text-teal-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">
+                        Completed
+                      </p>
+                      <p className="font-semibold">
+                        {format(
+                          new Date(selectedProject.completedAt),
+                          "MMMM yyyy",
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Description */}
+              {selectedProject?.description && (
+                <>
+                  <Separator />
+                  <div>
+                    <h3 className="font-semibold text-lg mb-3">
+                      Project Details
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {selectedProject.description}
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {/* CTA */}
+              <Separator />
+              <div className="bg-linear-to-r from-emerald-50 to-teal-50 p-6 rounded-lg">
+                <h3 className="font-semibold text-lg mb-2">
+                  Interested in a Similar System?
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  Get a free consultation and customized quote for your home or
+                  business.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    className="bg-emerald-600 hover:bg-emerald-500"
+                    asChild
+                  >
+                    <a
+                      href="https://wa.me/2347068288647"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Phone className="mr-2 h-4 w-4" />
+                      WhatsApp Us
+                    </a>
+                  </Button>
+                  <Button variant="outline" asChild>
+                    <a href="tel:07068288647">
+                      <Phone className="mr-2 h-4 w-4" />
+                      Call Now
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20 md:py-28">
         <Card className="bg-linear-to-br from-emerald-600 via-emerald-700 to-teal-700 border-0 shadow-2xl overflow-hidden relative">
-          <div className="absolute inset-0 bg-grid-white/10 [mask:linear-gradient(0deg,transparent,black)]" />
+          <div className="absolute inset-0 bg-grid-white/10 mask-[linear-gradient(0deg,transparent,black)]" />
           <CardContent className="p-12 md:p-20 relative z-10 text-center text-white">
             <Sun className="h-16 w-16 mx-auto mb-6 text-amber-300" />
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
