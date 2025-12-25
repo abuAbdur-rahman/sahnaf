@@ -19,8 +19,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Suspense } from "react";
 
-export default function AuthErrorPage() {
+function ErrorDetails() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
@@ -248,5 +249,13 @@ export default function AuthErrorPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthErrorPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ErrorDetails />
+    </Suspense>
   );
 }
