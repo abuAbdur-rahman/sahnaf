@@ -37,7 +37,7 @@ export default function Header({ shopStatus = "open" }: HeaderProps) {
             className="flex items-center gap-2 hover:opacity-80 transition"
           >
             <div className="">
-              <Image src="/logo.jpg" alt="LOGO" width={40} height={30} />
+              <Image src="/logo.png" alt="LOGO" width={40} height={30} />
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-lg leading-tight">

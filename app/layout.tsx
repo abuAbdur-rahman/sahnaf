@@ -10,7 +10,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Sahnaf Global Tech | Solar, Gas & Electronics",
-  icons: "/logo.jpg",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
   description:
     "Your one-stop shop for solar installations, gas refills, power banks, chargers, and tech accessories in Ogbomoso. Two convenient locations: Under-G and Randa.",
   keywords:
