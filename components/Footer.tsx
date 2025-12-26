@@ -38,8 +38,8 @@ const Footer = () => {
             </Link>
             <p className="text-sm leading-relaxed text-slate-400">
               Your trusted partner for solar installations, cooking gas, and
-              quality tech products in Ogbomoso. Powering homes and businesses
-              since 2019.
+              quality phone accesories in Ogbomoso. Powering homes and
+              businesses since 2019.
             </p>
             <div className="flex gap-3">
               <Button
@@ -111,7 +111,7 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               {[
                 { icon: Sun, label: "Solar Installation" },
-                { icon: ShoppingBag, label: "Tech Products" },
+                { icon: ShoppingBag, label: "Phone Accesories" },
                 { icon: Zap, label: "Gas Refills" },
                 { icon: Phone, label: "POS Services" },
                 { icon: Phone, label: "Repairs & Support" },
@@ -150,7 +150,7 @@ const Footer = () => {
                   <div>
                     <p className="text-slate-400 text-xs mb-1">Under-G Shop</p>
                     <a
-                      href="tel:08032580975"
+                      href="tel:08061154835"
                       className="text-white hover:text-emerald-400 transition-colors font-medium"
                     >
                       080 6115 4835
@@ -162,7 +162,7 @@ const Footer = () => {
                   <div>
                     <p className="text-slate-400 text-xs mb-1">Randa Shop</p>
                     <a
-                      href="tel:08161154835"
+                      href="tel:08032580975"
                       className="text-white hover:text-emerald-400 transition-colors font-medium"
                     >
                       080 3258 0975

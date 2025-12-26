@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Sahnaf Global Tech - Solar, Gas & Electronics",
     short_name: "Sahnaf Tech",
     description:
-      "Your trusted partner for solar installations, cooking gas refills, and quality tech products in Ogbomoso. Professional solar power solutions, electronics, and convenient services.",
+      "Your trusted partner for solar installations, cooking gas refills, and quality phone accesoriess in Ogbomoso. Professional solar power solutions, electronics, and convenient services.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
@@ -59,7 +59,7 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name: "Shop Products",
         short_name: "Shop",
-        description: "Browse our tech products",
+        description: "Browse our phone accesoriess",
         url: "/shop",
         icons: [{ src: "/icon.png", sizes: "192x192" }],
       },

@@ -47,7 +47,7 @@ async function getShops() {
       //   name: "Jornalis Junction (Under-G)",
       //   address: "UnderG Area, Ogbomoso, Oyo State",
       //   phone: "08061154835",
-      //   services: ["Gas Refill", "Oil", "POS", "Tech Products", "Solar Pickup"],
+      //   services: ["Gas Refill", "Oil", "POS", "phone accesoriess", "Solar Pickup"],
       //   hasGas: true,
       //   mapEmbed:
       //     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d476.8335889582579!2d4.26279230063179!3d8.159310035985504!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10370daf2d14ff23%3A0xeacf0a78619bdb88!2sJolanis%20Guest%20House!5e0!3m2!1sen!2sng!4v1766588385761!5m2!1sen!2sng",
@@ -110,7 +110,7 @@ export default async function HomePage() {
             </h1>
 
             <p className="text-xl md:text-2xl text-slate-300 mb-10 leading-relaxed max-w-2xl">
-              From reliable solar installations to quality tech products and
+              From reliable solar installations to quality phone accesoriess and
               convenient services—all in Ogbomoso.
             </p>
 
@@ -207,7 +207,7 @@ export default async function HomePage() {
             </Link>
           </Card>
 
-          {/* Tech Products Card */}
+          {/* phone accesories Card */}
           <Card className="border-2 shadow-lg hover:shadow-xl hover:border-emerald-500 transition-all group cursor-pointer">
             <Link href="/shop">
               <CardContent className="p-6">
@@ -255,7 +255,7 @@ export default async function HomePage() {
             },
             {
               icon: ShoppingBag,
-              title: "Tech Products",
+              title: "Phone Accesories",
               desc: "Genuine electronics, chargers, and accessories you can trust.",
               color: "from-emerald-500 to-teal-600",
             },
@@ -325,7 +325,7 @@ export default async function HomePage() {
               Ready to Get Started?
             </h2>
             <p className="text-xl md:text-2xl mb-10 text-emerald-50 max-w-2xl mx-auto">
-              Whether you need solar power, tech products, or gas
+              Whether you need solar power, phone accesories, or gas
               refills—we&apos;re here to help.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

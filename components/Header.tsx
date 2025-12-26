@@ -191,8 +191,8 @@ export default function Header({ shopStatus = "open" }: HeaderProps) {
                     </p>
                     <div className="space-y-1 text-sm text-emerald-700">
                       <p>General: 07068288647</p>
-                      <p>Under-G: 08032580975</p>
-                      <p>Randa: 08161154835</p>
+                      <p>Under-G: 08061154835</p>
+                      <p>Randa: 08032580975</p>
                     </div>
                   </div>
                 </nav>

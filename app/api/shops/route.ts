@@ -9,7 +9,7 @@ const shopsData: Shop[] = [
     name: "Jornalis Junction (Under-G)",
     address: "UnderG Area, Ogbomoso, Oyo State",
     phone: "08061154835",
-    services: ["Gas Refill", "Oil", "POS", "Tech Products", "Solar Pickup"],
+    services: ["Gas Refill", "Oil", "POS", "phone accesoriess", "Solar Pickup"],
     hasGas: true,
     mapEmbed:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d987.3575857394369!2d4.262613328514675!3d8.159323627019127!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10370d00345597ff%3A0x84cfe0dfb9e40f99!2sSahnaf%20Global%20Tech!5e0!3m2!1sen!2sng!4v1766671519746!5m2!1sen!2sng",
