@@ -198,11 +198,11 @@ export default async function HomePage() {
                 <h3 className="font-bold text-xl mb-2 text-white">
                   Solar Solutions
                 </h3>
-                <p className="mb-4 leading-relaxed text-amber-50">
+                <p className="mb-4 leading-relaxed text-gray-200">
                   Professional solar installation for homes and businesses. Say
                   goodbye to NEPA stress.
                 </p>
-                <div className="flex items-center gap-2 font-semibold group-hover:gap-3 transition-all text-amber-100">
+                <div className="flex items-center gap-2 font-semibold group-hover:gap-3 transition-all text-white">
                   Learn More <ChevronRight className="h-4 w-4" />
                 </div>
               </CardContent>
@@ -219,11 +219,11 @@ export default async function HomePage() {
                 <h3 className="font-bold text-xl mb-2 text-white">
                   Phone Accessories Store
                 </h3>
-                <p className="text-amber-50 mb-4 leading-relaxed">
+                <p className="text-gray-200 mb-4 leading-relaxed">
                   Quality chargers, power banks, accessories, and more. All in
                   stock and ready.
                 </p>
-                <div className="flex items-center gap-2 text-amber-100 font-semibold group-hover:gap-3 transition-all">
+                <div className="flex text-white items-center gap-2 font-semibold group-hover:gap-3 transition-all">
                   Browse Shop <ChevronRight className="h-4 w-4" />
                 </div>
               </CardContent>
