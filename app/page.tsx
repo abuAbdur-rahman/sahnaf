@@ -195,12 +195,14 @@ export default async function HomePage() {
                 <div className="bg-linear-to-br from-amber-500 to-orange-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <Zap className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="font-bold text-xl mb-2">Solar Solutions</h3>
-                <p className="text-muted-foreground mb-4 leading-relaxed">
+                <h3 className="font-bold text-xl mb-2 text-white">
+                  Solar Solutions
+                </h3>
+                <p className="mb-4 leading-relaxed text-amber-50">
                   Professional solar installation for homes and businesses. Say
                   goodbye to NEPA stress.
                 </p>
-                <div className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-3 transition-all">
+                <div className="flex items-center gap-2 font-semibold group-hover:gap-3 transition-all text-amber-100">
                   Learn More <ChevronRight className="h-4 w-4" />
                 </div>
               </CardContent>
@@ -214,14 +216,14 @@ export default async function HomePage() {
                 <div className="bg-linear-to-br from-emerald-500 to-teal-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <ShoppingBag className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="font-bold text-xl mb-2">
+                <h3 className="font-bold text-xl mb-2 text-white">
                   Phone Accessories Store
                 </h3>
-                <p className="text-muted-foreground mb-4 leading-relaxed">
+                <p className="text-amber-50 mb-4 leading-relaxed">
                   Quality chargers, power banks, accessories, and more. All in
                   stock and ready.
                 </p>
-                <div className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-3 transition-all">
+                <div className="flex items-center gap-2 text-amber-100 font-semibold group-hover:gap-3 transition-all">
                   Browse Shop <ChevronRight className="h-4 w-4" />
                 </div>
               </CardContent>
