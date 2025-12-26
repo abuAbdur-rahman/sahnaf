@@ -15,20 +15,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ShopCard from "@/components/ShopCard";
 import { Shop } from "@/types";
-import { formatDistanceToNow } from "date-fns";
-import { formatPrice } from "@/lib/utils";
+// import { formatDistanceToNow } from "date-fns";
+// import { formatPrice } from "@/lib/utils";
 
-async function getGasPrice() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/gas-price`,
-      { cache: "no-store" },
-    );
-    return res.json();
-  } catch {
-    return { price: 1300, updatedAt: new Date() };
-  }
-}
+// async function getGasPrice() {
+//   try {
+//     const res = await fetch(
+//       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/gas-price`,
+//       { cache: "no-store" },
+//     );
+//     return res.json();
+//   } catch {
+//     return { price: 1300, updatedAt: new Date() };
+//   }
+// }
 
 async function getShops() {
   try {
@@ -67,7 +67,7 @@ async function getShops() {
 }
 
 export default async function HomePage() {
-  const gasPrice = await getGasPrice();
+  // const gasPrice = await getGasPrice();
   const shops = await getShops();
 
   return (
@@ -156,9 +156,9 @@ export default async function HomePage() {
 
       {/* Services Grid */}
       <section className="container mx-auto px-4 -mt-20 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Gas Price Card */}
-          <Card className="bg-linear-to-br from-emerald-500 to-teal-600 border-0 shadow-xl hover:shadow-2xl transition-all group cursor-pointer">
+          {/*<Card className="bg-linear-to-br from-emerald-500 to-teal-600 border-0 shadow-xl hover:shadow-2xl transition-all group cursor-pointer">
             <Link href="/shop">
               <CardContent className="p-6 text-white">
                 <div className="flex items-start justify-between mb-4">
@@ -186,10 +186,10 @@ export default async function HomePage() {
                 </div>
               </CardContent>
             </Link>
-          </Card>
+          </Card>*/}
 
           {/* Solar Services Card */}
-          <Card className="border-2 shadow-lg hover:shadow-xl hover:border-emerald-500 transition-all group cursor-pointer">
+          <Card className="bg-linear-to-br from-emerald-500 to-teal-600 border-0 shadow-xl hover:shadow-2xl transition-all group cursor-pointer">
             <Link href="/solar">
               <CardContent className="p-6">
                 <div className="bg-linear-to-br from-amber-500 to-orange-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -208,7 +208,7 @@ export default async function HomePage() {
           </Card>
 
           {/* phone accesories Card */}
-          <Card className="border-2 shadow-lg hover:shadow-xl hover:border-emerald-500 transition-all group cursor-pointer">
+          <Card className="bg-linear-to-br from-emerald-500 to-teal-600 border-0 shadow-xl hover:shadow-2xl transition-all group cursor-pointer">
             <Link href="/shop">
               <CardContent className="p-6">
                 <div className="bg-linear-to-br from-emerald-500 to-teal-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
