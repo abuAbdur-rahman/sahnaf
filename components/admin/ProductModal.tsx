@@ -44,7 +44,7 @@ export const ProductModal: React.FC<Props> = ({
     name: "",
     price: 0,
     category: PRODUCT_CATEGORIES[0],
-    shop: SHOP_LOCATIONS.UNDERG,
+    shop: SHOP_LOCATIONS.BOTH,
     stock: "in-stock" as StockStatus,
     description: "",
     image: "",
