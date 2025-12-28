@@ -46,7 +46,7 @@ export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [gasPrice, setGasPrice] = useState({
     price: 1300,
-    updatedAt: new Date().toLocaleString(),
+    updatedAt: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
