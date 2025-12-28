@@ -166,7 +166,7 @@ export default function ShopPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <BannerSlideshow gasPrice={gasPrice} />
+      {!loading && <BannerSlideshow gasPrice={gasPrice} />}
 
       {/* Search Bar */}
       <div className="bg-white border-b sticky top-0 z-40 shadow-sm">
