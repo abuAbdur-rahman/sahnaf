@@ -2,10 +2,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Droplets, Loader2 } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import { Product, PRODUCT_CATEGORIES } from "@/types";
-import { formatPrice } from "@/lib/utils";
+// import { formatPrice } from "@/lib/utils";
 import BannerSlideshow from "@/components/banner";
 
 export default function ShopPage() {
@@ -74,7 +74,7 @@ export default function ShopPage() {
           <Droplets className="h-10 w-10 md:h-12 md:w-12 opacity-80" />
         </div>
       </div>*/}
-      <BannerSlideshow />
+      <BannerSlideshow gasPrice={gasPrice} />
 
       {/* Search Bar */}
       <div className="bg-white border-b sticky top-18.25 z-30 shadow-sm">
