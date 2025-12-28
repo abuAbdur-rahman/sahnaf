@@ -55,25 +55,33 @@ export interface SolarCalculation {
 export type StockStatus = "in-stock" | "low-stock" | "out-of-stock";
 
 export type ProductCategory =
+  | "Phones"
   | "Power Banks"
   | "Chargers"
   | "Cables"
   | "Adaptor"
   | "Earbuds"
-  | "MPS"
   | "Speakers"
+  | "Ear Phones"
+  | "Extensions"
   | "Phone Accessories"
+  | "Screen Protectors"
+  | "Electronics"
   | "Other";
 
 export const PRODUCT_CATEGORIES: ProductCategory[] = [
+  "Phones",
   "Power Banks",
   "Chargers",
   "Cables",
   "Adaptor",
   "Earbuds",
-  "MPS",
   "Speakers",
+  "Ear Phones",
+  "Extensions",
   "Phone Accessories",
+  "Screen Protectors",
+  "Electronics",
   "Other",
 ];
 

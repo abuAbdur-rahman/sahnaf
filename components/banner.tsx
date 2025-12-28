@@ -10,7 +10,8 @@ import {
   Zap,
 } from "lucide-react";
 import Image from "next/image";
-import { formatPrice } from "@/lib/utils";
+// import { formatPrice } from "@/lib/utils";
+import { formatDistanceToNow } from "date-fns";
 
 export default function BannerSlideshow({
   gasPrice,
@@ -28,7 +29,10 @@ export default function BannerSlideshow({
     () => [
       {
         type: "gas-price",
-        content: { price: gasPrice.price, updatedAt: gasPrice.updatedAt },
+        content: {
+          price: gasPrice.price,
+          updatedAt: formatDistanceToNow(gasPrice.updatedAt),
+        },
       },
       {
         type: "image",
@@ -95,7 +99,7 @@ export default function BannerSlideshow({
   return (
     <div className="relative w-full bg-linear-to-r from-slate-800 via-slate-900 to-zinc-900 text-white overflow-hidden">
       {/* Slides container */}
-      <div className="relative h-56 sm:h-64 md:h-72 lg:h-80">
+      <div className="relative h-60 sm:h-64 md:h-90 lg:h-150">
         {slides.map((slide, index) => {
           const isActive = index === currentSlide;
           const translateClass = isActive
