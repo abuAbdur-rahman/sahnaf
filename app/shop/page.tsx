@@ -6,6 +6,7 @@ import { Search, Droplets, Loader2 } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import { Product, PRODUCT_CATEGORIES } from "@/types";
 import { formatPrice } from "@/lib/utils";
+import BannerSlideshow from "@/components/banner";
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -57,7 +58,7 @@ export default function ShopPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header with Gas Price Recap */}
-      <div className="bg-linear-to-r from-emerald-500 to-teal-600 text-white py-4 md:py-6">
+      {/*<div className="bg-linear-to-r from-emerald-500 to-teal-600 text-white py-4 md:py-6">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div>
             <div className="text-xs opacity-90 mb-1">
@@ -72,7 +73,8 @@ export default function ShopPage() {
           </div>
           <Droplets className="h-10 w-10 md:h-12 md:w-12 opacity-80" />
         </div>
-      </div>
+      </div>*/}
+      <BannerSlideshow />
 
       {/* Search Bar */}
       <div className="bg-white border-b sticky top-18.25 z-30 shadow-sm">

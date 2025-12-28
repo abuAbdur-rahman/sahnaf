@@ -15,20 +15,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ShopCard from "@/components/ShopCard";
 import { Shop } from "@/types";
-// import { formatDistanceToNow } from "date-fns";
-// import { formatPrice } from "@/lib/utils";
-
-// async function getGasPrice() {
-//   try {
-//     const res = await fetch(
-//       `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/gas-price`,
-//       { cache: "no-store" },
-//     );
-//     return res.json();
-//   } catch {
-//     return { price: 1300, updatedAt: new Date() };
-//   }
-// }
 
 async function getShops() {
   try {
